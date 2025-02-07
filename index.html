@@ -1,0 +1,785 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Token Presale</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: Arial, sans-serif;
+        background: #1A1F2C;
+        color: #ffffff;
+      }
+
+      nav {
+        position: fixed;
+        width: 100%;
+        background: rgba(26, 31, 44, 0.8);
+        -webkit-backdrop-filter: blur(8px);
+                backdrop-filter: blur(8px);
+        padding: 1rem;
+        z-index: 1000;
+      }
+
+      .nav-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .logo {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #9b87f5;
+      }
+
+      .connect-btn {
+        background: transparent;
+        border: 1px solid #9b87f5;
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .connect-btn:hover {
+        background: #9b87f5;
+      }
+
+      .hero {
+        padding: 8rem 1rem 4rem;
+        text-align: center;
+        background: linear-gradient(135deg, rgba(155, 135, 245, 0.1), rgba(26, 31, 44, 0.1));
+      }
+
+      .hero h1 {
+        font-size: 3.5rem;
+        margin-bottom: 1rem;
+      }
+
+      .hero p {
+        color: #c8c8c9;
+        font-size: 1.2rem;
+        margin-bottom: 2rem;
+      }
+
+      .countdown {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1rem;
+        max-width: 600px;
+        margin: 0 auto;
+      }
+
+      .countdown-item {
+        background: rgba(26, 31, 44, 0.6);
+        padding: 1rem;
+        border-radius: 8px;
+        -webkit-backdrop-filter: blur(8px);
+                backdrop-filter: blur(8px);
+      }
+
+      .countdown-value {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #ffffff;
+      }
+
+      .countdown-label {
+        color: #9b87f5;
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        letter-spacing: 0.1em;
+      }
+
+      .features {
+        padding: 4rem 1rem;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+      }
+
+      .feature-card {
+        background: rgba(26, 31, 44, 0.6);
+        padding: 2rem;
+        border-radius: 8px;
+        -webkit-backdrop-filter: blur(8px);
+                backdrop-filter: blur(8px);
+        transition: transform 0.3s ease;
+      }
+
+      .feature-card:hover {
+        transform: translateY(-5px);
+      }
+
+      .feature-icon {
+        font-size: 2rem;
+        color: #9b87f5;
+        margin-bottom: 1rem;
+      }
+
+      .presale {
+        padding: 4rem 1rem;
+        max-width: 600px;
+        margin: 0 auto;
+        text-align: center;
+      }
+
+      .progress-container {
+        background: rgba(26, 31, 44, 0.6);
+        padding: 2rem;
+        border-radius: 8px;
+        margin-top: 2rem;
+      }
+
+      .progress-info {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.5rem;
+      }
+
+      .progress-bar {
+        width: 100%;
+        height: 8px;
+        background: #333;
+        border-radius: 4px;
+        overflow: hidden;
+      }
+
+      .progress-fill {
+        width: 65.5%;
+        height: 100%;
+        background: #9b87f5;
+        transition: width 0.3s ease;
+      }
+
+      .purchase-btn {
+        background: #9b87f5;
+        color: white;
+        border: none;
+        padding: 1rem 2rem;
+        border-radius: 4px;
+        font-size: 1rem;
+        cursor: pointer;
+        margin-top: 2rem;
+        transition: background 0.3s ease;
+      }
+
+      .purchase-btn:hover {
+        background: #7e69ab;
+      }
+
+      @media (max-width: 768px) {
+        .hero h1 {
+          font-size: 2.5rem;
+        }
+        
+        .countdown {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+
+      .spinner {
+            border: 4px solid #f3f3f3; /* Light gray background */
+            border-top: 4px solid #3498db; /* Blue spinner */
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            animation: spin 1s linear infinite;
+            margin-right: 8px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+
+
+
+
+            /* Toast container */
+    #toast-container {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        z-index: 1000;
+    }
+
+    /* Toast styles */
+    .toast {
+        display: flex;
+        align-items: center;
+        min-width: 250px;
+        margin-bottom: 10px;
+        padding: 15px;
+        border-radius: 5px;
+        color: white;
+        background-color: #333;
+        font-size: 16px;
+        opacity: 0;
+        animation: fadeIn 0.5s forwards, fadeOut 0.5s forwards 2.5s;
+    }
+
+    /* Success Toast */
+    .toast.success {
+        background-color: #4caf50;
+    }
+
+    /* Error Toast */
+    .toast.error {
+        background-color: #f44336;
+    }
+
+    /* Fade-in and fade-out animations */
+    @keyframes fadeIn {
+        0% {
+            opacity: 0;
+            transform: translateX(20px);
+        }
+        100% {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    @keyframes fadeOut {
+        0% {
+            opacity: 1;
+        }
+        100% {
+            opacity: 0;
+            transform: translateX(20px);
+        }
+    }
+
+
+
+
+    </style>
+  
+<style>
+    #presalesite-badge {
+        position: fixed;
+        bottom: 10px;
+        right: 10px;
+        width: 141px;
+        padding: 5px 13px;  
+        background-color: #000;
+        color: #fff;
+        font-size: 12px;
+        border-radius: 5px;
+        font-family: sans-serif;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+</style>
+
+ 
+
+</head>
+  <body>
+    <nav>
+      <div class="nav-content">
+
+
+        <div class="logo">TokenName</div>
+
+        <div  >
+
+        <img height="20" width="20" src="polygon.png">
+        <span id="UseNetwork">Polygon</span>
+
+
+<button class="connect-btn" id="connectWallet">Connect Metamask Wallet</button>
+
+ 
+
+<span id="userAddress"></span>
+
+        </div>
+        
+
+      </div>
+    </nav>
+
+    <section class="hero">
+      <h1>The Future of <span style="color: #9b87f5;">Digital Assets</span></h1>
+      <p>Join the revolution of decentralized finance with our innovative token presale</p>
+      <div class="countdown" id="countdown">
+        <div class="countdown-item">
+          <div class="countdown-value" id="days">00</div>
+          <div class="countdown-label">Days</div>
+        </div>
+        <div class="countdown-item">
+          <div class="countdown-value" id="hours">00</div>
+          <div class="countdown-label">Hours</div>
+        </div>
+        <div class="countdown-item">
+          <div class="countdown-value" id="minutes">00</div>
+          <div class="countdown-label">Minutes</div>
+        </div>
+        <div class="countdown-item">
+          <div class="countdown-value" id="seconds">00</div>
+          <div class="countdown-label">Seconds</div>
+        </div>
+      </div>
+    </section>
+
+
+    <section class="presale">
+      <h2>Token Presale</h2>
+      <p>Don't miss out on this opportunity</p>
+      <div class="progress-container">
+        <div class="progress-info">
+          <span id="progressText"> </span>
+          <span id="tokensSoldText" > </span>
+  
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem; text-align: left;">
+          <div>
+            <div style="color: #c8c8c9;">0.0001 <a href="https://polygonscan.com/address/0x2791bca1f2de4661ed88a30c99a7a9449aa84174" target="_blank">USDC</a>/Token</div>
+     
+
+     
+
+          </div>
+      
+        </div>
+        <div id="walletInfo" style="margin-top: 1rem; ">
+           
+          <div style="margin-top: 0.5rem;">
+            <label for="tokenAmount">Buy Amount:</label>
+            <input 
+              type="number" 
+              id="tokenAmount" 
+              min="1" 
+              max="10000"
+              value="10" 
+              style="background: rgba(26, 31, 44, 0.6); border: 1px solid #9b87f5; color: white; padding: 0.5rem; border-radius: 4px; width: 100%; margin-top: 0.5rem;"
+            >
+          </div>
+        </div>
+
+
+    <button id="purchaseBtn" class="purchase-btn" onclick="Purchase()">
+ 
+    Purchase Tokens
+    </button>
+
+  <!--
+  <button class="purchase-btn" id="purchaseBtn" onclick="Purchase()">Purchase Tokens →</button>
+  -->
+        
+      </div>
+    </section>
+
+
+    <section class="features">
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">💰</div>
+          <h3>Tokenomics</h3>
+          <p>Carefully designed token distribution ensuring long-term sustainability</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🛡️</div>
+          <h3>Security</h3>
+          <p>Audited smart contracts with maximum security measures</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">👛</div>
+          <h3>Easy Purchase</h3>
+          <p>Simple and secure token purchase process</p>
+        </div>
+      </div>
+    </section>
+
+
+<div id="toast-container"></div>
+
+
+
+
+ 
+
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.10.0/dist/web3.min.js"></script>
+     
+  
+ <script>
+    let web3;
+    let presaleContract;
+    let usdtToken;
+    let userAddress;
+
+    const CHAIN_ID = 137;
+
+    let   USDTAddress="0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174"    
+    const contractAddress = "0x6ba7Ba5E3Cf774fD56B97199F2D63a3E455a57D9"; // Replace with your TokenPresale contract address
+    const tokenAddress = "0x91FeC63d71BACe0B5Fc8a0d88960B2F48aEfcddd"; // Replace with your token address
+    const presaleABI = [{"inputs":[{"internalType":"uint256","name":"tokenAmount","type":"uint256"}],"name":"buyTokens","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"endPresale","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"newPrice","type":"uint256"}],"name":"setTokenPrice","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_TokenAddressForSale","type":"address"},{"internalType":"address","name":"_USDTokenAddress","type":"address"},{"internalType":"uint256","name":"_presaleDurationInDays","type":"uint256"}],"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"buyer","type":"address"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"}],"name":"TokensPurchased","type":"event"},{"inputs":[],"name":"withdraw","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"getPresaleProgress","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"owner","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"presaleActive","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"presaleEndTime","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"token","outputs":[{"internalType":"contract IERC20","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"totalTokensSold","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"USDForOneToken","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"USDToken","outputs":[{"internalType":"contract IERC20","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"USDTokenAddress","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"USDTokenDecimals","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"}]
+    const tokenABI = [{"inputs":[{"internalType":"uint256","name":"initialSupply","type":"uint256"}],"stateMutability":"nonpayable","type":"constructor"},{"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"allowance","type":"uint256"},{"internalType":"uint256","name":"needed","type":"uint256"}],"name":"ERC20InsufficientAllowance","type":"error"},{"inputs":[{"internalType":"address","name":"sender","type":"address"},{"internalType":"uint256","name":"balance","type":"uint256"},{"internalType":"uint256","name":"needed","type":"uint256"}],"name":"ERC20InsufficientBalance","type":"error"},{"inputs":[{"internalType":"address","name":"approver","type":"address"}],"name":"ERC20InvalidApprover","type":"error"},{"inputs":[{"internalType":"address","name":"receiver","type":"address"}],"name":"ERC20InvalidReceiver","type":"error"},{"inputs":[{"internalType":"address","name":"sender","type":"address"}],"name":"ERC20InvalidSender","type":"error"},{"inputs":[{"internalType":"address","name":"spender","type":"address"}],"name":"ERC20InvalidSpender","type":"error"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"owner","type":"address"},{"indexed":true,"internalType":"address","name":"spender","type":"address"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"}],"name":"Approval","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"from","type":"address"},{"indexed":true,"internalType":"address","name":"to","type":"address"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"}],"name":"Transfer","type":"event"},{"inputs":[{"internalType":"address","name":"owner","type":"address"},{"internalType":"address","name":"spender","type":"address"}],"name":"allowance","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"value","type":"uint256"}],"name":"approve","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"decimals","outputs":[{"internalType":"uint8","name":"","type":"uint8"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"mint","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"name","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"symbol","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"totalSupply","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"value","type":"uint256"}],"name":"transfer","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"from","type":"address"},{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"value","type":"uint256"}],"name":"transferFrom","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"}]
+
+    const connectWalletBtn = document.getElementById("connectWallet");
+    const purchaseBtn = document.getElementById("purchaseBtn");
+    const tokenAmountInput = document.getElementById("tokenAmount");
+    const walletInfo = document.getElementById("walletInfo");
+    const userAddressElement = document.getElementById("userAddress");
+    const progressText = document.getElementById("progressText");
+    const tokensSoldText = document.getElementById("tokensSoldText");
+ 
+
+    const progressFill = document.getElementById("progressFill");
+
+    function shortenAddress(address) {
+        if (address.length > 10) { // Ensure the string is long enough to shorten
+            return address.substring(0, 4) + '...' + address.substring(address.length - 2);
+        }
+        return address; // Return as is if it's already short
+    }
+
+
+async function connectWallet() {
+
+    await detectAndSwitchNetwork()
+  if (window.ethereum) {
+    web3 = new Web3(window.ethereum);
+    try {
+      // Request account access
+      await window.ethereum.request({ method: "eth_requestAccounts" });
+      const accounts = await web3.eth.getAccounts();
+      userAddress = accounts[0];  // Get the first account
+      displayConnectedAddress( shortenAddress(userAddress) );
+    } catch (error) {
+      console.error("Error connecting to wallet", error);
+      showToast("Failed to connect wallet. Please try again.");
+    }
+  } else {
+    showToast("Please install MetaMask to connect your wallet.");
+  }
+}
+
+// Function to display connected wallet address
+function displayConnectedAddress(address) {
+  userAddressElement.textContent = address;
+  walletInfo.style.display = "block"; // Show wallet info
+  connectWalletBtn.textContent = "Disconnect Wallet"; // Update button text
+}
+
+
+
+
+
+// Check wallet connection before purchasing
+async function Purchase(){
+ 
+  if (!userAddress) {
+    //showToast("Please connect your wallet first.");
+   await connectWallet()
+   // return;
+  }
+
+  const tokenAmount = parseInt(tokenAmountInput.value, 10);
+  if (isNaN(tokenAmount) || tokenAmount < 1 || tokenAmount > 10000) {
+    showToast("Please enter a valid token amount between 1 and 10,000.");
+    return;
+  }
+
+  // Proceed with the purchase logic here
+  checkAllowanceAndPurchase(tokenAmount);
+}
+
+
+
+
+
+
+async function checkAllowanceAndPurchase(amount) {
+
+// Add the spinner to the button
+            purchaseBtn.innerHTML = '<div class="spinner"></div> Processing...';
+            purchaseBtn.disabled = true; // Optionally, disable the button to prevent multiple clicks
+            
+  const accounts = await web3.eth.getAccounts();
+  const userAddress = accounts[0];
+
+  // Get the current allowance of USDT for the presale contract
+   const allowance = await usdtToken.methods.allowance(userAddress, presaleContract.options.address).call();
+
+   const USDForOneToken = await presaleContract.methods.USDForOneToken().call();
+
+   var USDAmount=USDForOneToken * amount
+
+   console.log("usd allowance:",allowance)
+    // Check if allowance is sufficient
+    if (parseFloat(allowance) < USDAmount) {
+    // If allowance is insufficient, ask the user to approve the required amount  
+
+    await increaseAllowance(USDAmount);    
+    }else{
+    // Proceed to purchase tokens after allowance is confirmed
+    await purchaseTokens(amount);
+    }
+
+// Task is done, remove the spinner and enable the button again
+                purchaseBtn.innerHTML = 'Purchase Tokens';
+                purchaseBtn.disabled = false; // Enable the button again
+
+}
+
+// Function to increase allowance of USDT for the presale contract
+async function increaseAllowance(amount) {
+  const accounts = await web3.eth.getAccounts();
+  const userAddress = accounts[0];
+
+  // Call the approve method on USDT contract to increase allowance
+  try {
+    const tx = await usdtToken.methods.approve(presaleContract.options.address, amount).send({ from: userAddress });
+    console.log('Allowance increased successfully', tx);
+    showToast('Allowance increased successfully')
+    await purchaseTokens(amount);
+
+  } catch (error) {
+    console.error('Error while increasing allowance:', error);
+
+  }
+}
+
+
+
+// Function to purchase tokens (to be implemented)
+async function purchaseTokens(amount) {
+
+
+     
+
+  // Logic to handle token purchase through smart contract
+  console.log(`Purchasing ${amount} wei tokens...`);
+  // Example interaction with smart contract (modify as needed)
+  const presaleContract = new web3.eth.Contract(presaleABI, contractAddress);
+  try {
+    //const price = await presaleContract.methods.USDForOneToken().call();
+    
+    await presaleContract.methods.buyTokens(amount).send({ from: userAddress });
+    showToast(`Successfully purchased ${amount} tokens!`);
+  } catch (error) {
+    console.error("Error purchasing tokens", error);
+    showToast("Failed to purchase tokens. Please try again.");
+  }
+}
+
+// Wallet connection button event
+connectWalletBtn.addEventListener("click", () => {
+  if (userAddress) {
+    // Disconnect wallet (optional, you can add a functionality to disconnect)
+    userAddress = null;
+ userAddressElement.textContent = "";
+    connectWalletBtn.textContent = "Connect Wallet";
+  } else {
+    connectWallet();
+  }
+});
+
+
+
+
+ // Update presale progress
+    async function updatePresaleInfo() {
+      const tokenPrice = await presaleContract.methods.USDForOneToken().call();
+      const totalTokensSoldWei = await presaleContract.methods.totalTokensSold().call();
+      const totalTokensSold =  totalTokensSoldWei/ 100000000000000000
+
+      const ForSaleAmount = 10000000
+      const presaleProgress = (totalTokensSold * 100) / ForSaleAmount;
+
+  // Print values to the console
+    console.log("Token Price: ", tokenPrice);
+    console.log("Total Tokens Sold: ", totalTokensSold);
+    console.log("ForSaleAmount: ", ForSaleAmount);
+    console.log("Presale Progress: ", presaleProgress.toFixed(2) + "%");
+
+
+      progressText.textContent = `Progress (${presaleProgress}%)`;
+      tokensSoldText.textContent = `${totalTokensSold}` +`/ ${ForSaleAmount} TOKENS`
+    
+      progressFill.style.width = `${presaleProgress}%`;
+    }
+
+
+
+
+// Add this function after the contract initialization and Web3 setup
+async function updateCountdown() {
+  try {
+    // Fetch the presale end time from the contract
+    const presaleEndTime = await presaleContract.methods.presaleEndTime().call();
+
+    // Update the countdown every second
+    const countdownInterval = setInterval(() => {
+      const now = Date.now();
+      const timeRemaining = presaleEndTime * 1000 - now; // Convert to milliseconds
+
+      if (timeRemaining <= 0) {
+        clearInterval(countdownInterval);
+        document.getElementById("countdown").innerHTML = "Presale Ended";
+        return;
+      }
+
+      // Calculate remaining days, hours, minutes, and seconds
+      const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+
+      // Update the countdown div with the remaining time
+      document.getElementById("days").textContent = days < 10 ? `0${days}` : days;
+      document.getElementById("hours").textContent = hours < 10 ? `0${hours}` : hours;
+      document.getElementById("minutes").textContent = minutes < 10 ? `0${minutes}` : minutes;
+      document.getElementById("seconds").textContent = seconds < 10 ? `0${seconds}` : seconds;
+    }, 1000); // Update every second
+
+  } catch (error) {
+    console.error("Error fetching presale end time:", error);
+ 
+
+  }
+}
+
+
+
+
+
+
+
+
+
+    async function detectAndSwitchNetwork() {
+        // Check if MetaMask is installed
+        if (window.ethereum) {
+            try {
+                const currentChainId = await window.ethereum.request({ method: 'eth_chainId' });
+
+                if (parseInt(currentChainId, 16) !== CHAIN_ID) {
+                    // Network is not Polygon, ask the user to switch
+                    await switchToPolygonNetwork();
+                    updateCountdown()
+                } else {
+                    console.log('Already connected to Polygon Network');
+                }
+            } catch (error) {
+                console.error('Error detecting chain:', error);
+            }
+        } else {
+            alert('Please install MetaMask!');
+        }
+    }
+
+    async function switchToPolygonNetwork() {
+        try {
+            // Request to switch to the Polygon network
+            await window.ethereum.request({
+                method: 'wallet_switchEthereumChain',
+                params: [{ chainId: `0x${CHAIN_ID.toString(16)}` }]
+            });
+            console.log('Switched to Polygon Network');
+        } catch (error) {
+            // Handle errors, such as user rejecting the request
+            if (error.code === 4902) {
+                // Network is not added to MetaMask, so add it
+                await addPolygonNetwork();
+            } else {
+                console.error('Error switching network:', error);
+            }
+        }
+    }
+
+    async function addPolygonNetwork() {
+        try {
+            // Add Polygon network to MetaMask if not present
+            await window.ethereum.request({
+                method: 'wallet_addEthereumChain',
+                params: [{
+                    chainId: `0x${CHAIN_ID.toString(16)}`,
+                    chainName: 'Polygon Mainnet',
+                    rpcUrls: ['https://rpc-mainnet.maticvigil.com'],
+                    blockExplorerUrls: ['https://explorer.matic.network/'],
+                    nativeCurrency: {
+                        name: 'MATIC',
+                        symbol: 'MATIC',
+                        decimals: 18
+                    }
+                }]
+            });
+            console.log('Polygon Network added to MetaMask');
+        } catch (error) {
+            console.error('Error adding Polygon Network:', error);
+        }
+    }
+
+
+
+
+
+
+
+function showToast(message, type = 'success') {
+        const toastContainer = document.getElementById('toast-container');
+        
+        // Create toast element
+        const toast = document.createElement('div');
+        toast.classList.add('toast', type);  // Add type (success/error)
+        toast.innerText = message;
+
+        // Append the toast to the container
+        toastContainer.appendChild(toast);
+
+        // Remove the toast after 3 seconds (for animation)
+        setTimeout(() => {
+            toast.style.opacity = '0';  // Start fade-out animation
+            setTimeout(() => toast.remove(), 500);  // Remove after fade-out
+        }, 3000);
+    }
+
+
+if (window.ethereum) {
+web3 = new Web3(window.ethereum);
+
+presaleContract = new web3.eth.Contract(presaleABI, contractAddress);
+usdtToken = new web3.eth.Contract(tokenABI, USDTAddress);
+
+// Get token price, presale progress, etc.
+updatePresaleInfo();
+updateCountdown()
+} else {
+showToast("Please install MetaMask!");
+}
+
+
+
+
+
+  </script>
+
+
+</body>
+</html>
