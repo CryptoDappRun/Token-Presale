@@ -526,9 +526,11 @@ async function checkAllowanceAndPurchase(amount) {
   // Get the current allowance of USDT for the presale contract
    const allowance = await usdtToken.methods.allowance(userAddress, presaleContract.options.address).call();
 
-   const USDForOneToken = await presaleContract.methods.USDForOneToken().call();
+const USDForOneToken = await presaleContract.methods.USDForOneToken().call();
 
-   var USDAmount=USDForOneToken * amount
+// Convert `amount` to BigInt before performing the multiplication
+var USDAmount = BigInt(USDForOneToken) * BigInt(amount);
+
 
    console.log("usd allowance:",allowance)
     // Check if allowance is sufficient
@@ -611,14 +613,14 @@ connectWalletBtn.addEventListener("click", () => {
 
 
       const ForSaleAmount = 10000000
-     const presaleProgress = (BigInt(totalTokensSold) * BigInt(100)) / BigInt(ForSaleAmount);
+     const presaleProgress = (parseFloat(totalTokensSold) * parseFloat(100)) / parseFloat(ForSaleAmount);
 
 
   // Print values to the console
     console.log("Token Price: ", tokenPrice);
     console.log("Total Tokens Sold: ", totalTokensSold);
     console.log("ForSaleAmount: ", ForSaleAmount);
-    //console.log("Presale Progress: ", presaleProgress.toFixed(2) + "%");
+    console.log("Presale Progress: ", presaleProgress + "%");
 
 
       progressText.textContent = `Progress (${presaleProgress}%)`;
