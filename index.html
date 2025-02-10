@@ -607,17 +607,18 @@ connectWalletBtn.addEventListener("click", () => {
     async function updatePresaleInfo() {
       const tokenPrice = await presaleContract.methods.USDForOneToken().call();
       const totalTokensSoldWei = await presaleContract.methods.totalTokensSold().call();
-     const totalTokensSold = totalTokensSoldWei / BigInt(100000000000000000);
+      const totalTokensSold = totalTokensSoldWei / BigInt(100000000000000000);
 
 
       const ForSaleAmount = 10000000
-      const presaleProgress = (totalTokensSold * 100) / ForSaleAmount;
+     const presaleProgress = (BigInt(totalTokensSold) * BigInt(100)) / BigInt(ForSaleAmount);
+
 
   // Print values to the console
     console.log("Token Price: ", tokenPrice);
     console.log("Total Tokens Sold: ", totalTokensSold);
     console.log("ForSaleAmount: ", ForSaleAmount);
-    console.log("Presale Progress: ", presaleProgress.toFixed(2) + "%");
+    //console.log("Presale Progress: ", presaleProgress.toFixed(2) + "%");
 
 
       progressText.textContent = `Progress (${presaleProgress}%)`;
@@ -638,7 +639,7 @@ async function updateCountdown() {
     // Update the countdown every second
     const countdownInterval = setInterval(() => {
       const now = Date.now();
-      const timeRemaining = presaleEndTime * 1000 - now; // Convert to milliseconds
+  const timeRemaining = BigInt(presaleEndTime) * BigInt(1000) - BigInt(now);
 
       if (timeRemaining <= 0) {
         clearInterval(countdownInterval);
@@ -647,10 +648,15 @@ async function updateCountdown() {
       }
 
       // Calculate remaining days, hours, minutes, and seconds
-      const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+const days = timeRemaining / BigInt(1000 * 60 * 60 * 24);
+
+
+const hours = (timeRemaining % BigInt(1000 * 60 * 60 * 24)) / BigInt(1000 * 60 * 60);
+
+const timeRemainingNumber = Number(timeRemaining); // Convert BigInt to number
+const minutes = Math.floor((timeRemainingNumber % (1000 * 60 * 60)) / (1000 * 60));
+const seconds = Math.floor((timeRemainingNumber % (1000 * 60)) / 1000);
+
 
       // Update the countdown div with the remaining time
       document.getElementById("days").textContent = days < 10 ? `0${days}` : days;
