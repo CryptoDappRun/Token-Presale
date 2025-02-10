@@ -607,7 +607,8 @@ connectWalletBtn.addEventListener("click", () => {
     async function updatePresaleInfo() {
       const tokenPrice = await presaleContract.methods.USDForOneToken().call();
       const totalTokensSoldWei = await presaleContract.methods.totalTokensSold().call();
-      const totalTokensSold =  totalTokensSoldWei/ 100000000000000000
+     const totalTokensSold = totalTokensSoldWei / BigInt(100000000000000000);
+
 
       const ForSaleAmount = 10000000
       const presaleProgress = (totalTokensSold * 100) / ForSaleAmount;
